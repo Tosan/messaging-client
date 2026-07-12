@@ -1,0 +1,3 @@
+com.tosan.client.messaging.starter.configuration.MessagingClientConfiguration
+com.tosan.client.messaging.starter.configuration.ArmaghanNegarClientConfiguration
+com.tosan.client.messaging.starter.configuration.KaveNegarClientConfiguration

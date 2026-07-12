@@ -1,0 +1,2 @@
+com.tosan.client.messaging.chapar.config.ChaparPropertiesAutoConfiguration
+com.tosan.client.messaging.chapar.config.ChaparClientAutoConfiguration
