@@ -10,16 +10,16 @@
 
     <groupId>com.tosan.client.messaging</groupId>
     <artifactId>messaging-client</artifactId>
-    <version>0.3.8-SNAPSHOT</version>
+    <version>0.4.0-SNAPSHOT</version>
     <packaging>pom</packaging>
 
     <name>messaging-client</name>
     <description>This project is a spring-boot starter that provides messaging client</description>
 
     <modules>
-        <module>messaging-client-sample</module>
         <module>messaging-client-spring-boot-starter</module>
         <module>chapar-messaging-client-starter</module>
+        <module>messaging-client-sample</module>
     </modules>
 
     <properties>
@@ -29,9 +29,9 @@
     </properties>
 
     <scm>
-        <connection>scm:git:https://github.com/Tosan/tosan-httpserver-spring-boot-starter.git</connection>
-        <developerConnection>scm:git:https://github.com/Tosan/tosan-httpserver-spring-boot-starter.git</developerConnection>
-        <url>https://github.com/Tosan/tosan-httpserver-spring-boot-starter</url>
+        <connection>scm:git:https://github.com/Tosan/messaging-client.git</connection>
+        <developerConnection>scm:git:https://github.com/Tosan/messaging-client.git</developerConnection>
+        <url>https://github.com/Tosan/messaging-client</url>
         <tag>HEAD</tag>
     </scm>
 
@@ -144,7 +144,7 @@
                 <repository>
                     <id>github</id>
                     <name>GitHub</name>
-                    <url>https://maven.pkg.github.com/Tosan/tosan-httpserver-spring-boot-starter</url>
+                    <url>https://maven.pkg.github.com/Tosan/messaging-client</url>
                 </repository>
             </distributionManagement>
         </profile>
