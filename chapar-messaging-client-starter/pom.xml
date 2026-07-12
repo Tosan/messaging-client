@@ -9,12 +9,7 @@
 
     <artifactId>chapar-messaging-client-starter</artifactId>
     <name>chapar-messaging-client-starter</name>
-
-    <properties>
-        <maven.deploy.skip>false</maven.deploy.skip>
-        <maven.source.skip>false</maven.source.skip>
-        <maven.javadoc.skip>false</maven.javadoc.skip>
-    </properties>
+    <packaging>jar</packaging>
 
     <dependencies>
         <dependency>

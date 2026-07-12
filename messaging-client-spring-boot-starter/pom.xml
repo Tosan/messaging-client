@@ -11,12 +11,6 @@
     <name>messaging-client-spring-boot-starter</name>
     <packaging>jar</packaging>
 
-    <properties>
-        <maven.deploy.skip>false</maven.deploy.skip>
-        <maven.source.skip>false</maven.source.skip>
-        <maven.javadoc.skip>false</maven.javadoc.skip>
-    </properties>
-
     <dependencies>
         <dependency>
             <groupId>com.tosan.client.http</groupId>
