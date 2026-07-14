@@ -66,11 +66,10 @@ public class KaveNegarMessagingService implements MessagingService {
                     UriComponentsBuilder.fromUriString(kaveNegarInvoker.generateUrl(LOOKUP_URL));
             uriComponentsBuilder.query(kaveNegarInvoker.createQueryParamString(sendRequestDto));
             String url = uriComponentsBuilder.build().toUriString();
-            HttpHeaders headers = new HttpHeaders();
-            headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
-            HttpEntity<Object> req = new HttpEntity<>(null, headers);
-            KaveNegarResponseDto response =
-                    kaveNegarInvoker.getRestTemplate().getForObject(url, KaveNegarResponseDto.class, req);
+            KaveNegarResponseDto response = kaveNegarInvoker.getClient().get().uri(url)
+                    .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_FORM_URLENCODED_VALUE)
+                    .retrieve()
+                    .body(KaveNegarResponseDto.class);
             return kaveNegarAssembler.toSendOtpResponse(response);
         } else if (SIMPLE.equals(otpType)) {
             KaveNegarSendRequestDto kaveNegarSendRequestDto = kaveNegarAssembler.toSendOneToOneRequest(request,
@@ -90,10 +89,9 @@ public class KaveNegarMessagingService implements MessagingService {
                 UriComponentsBuilder.fromUriString(kaveNegarInvoker.generateUrl(baseUrl));
         uriComponentsBuilder.query(kaveNegarInvoker.createQueryParamString(sendRequestDto));
         String url = uriComponentsBuilder.build().encode().toUriString();
-        HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
-        HttpEntity<Object> req = new HttpEntity<>(null, headers);
-        return kaveNegarInvoker.getRestTemplate()
-                .postForObject(url, req, KaveNegarResponseDto.class);
+        return kaveNegarInvoker.getClient().post().uri(url)
+                .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_FORM_URLENCODED_VALUE)
+                .retrieve()
+                .body(KaveNegarResponseDto.class);
     }
 }

@@ -11,10 +11,4 @@ import org.springframework.context.annotation.Bean;
  */
 @AutoConfiguration
 public class ChaparPropertiesAutoConfiguration {
-
-    @Bean("chapar-client-properties")
-    @ConfigurationProperties("chapar.messaging-client")
-    public ChaparClientProperties chaparClientProperties() {
-        return new ChaparClientProperties();
-    }
 }
