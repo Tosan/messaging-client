@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
+import com.fasterxml.jackson.databind.json.JsonMapper;
 import com.tosan.client.http.restclient.starter.configuration.AbstractRestClientConfiguration;
 import com.tosan.client.messaging.starter.config.MessagingClientConfig;
 import com.tosan.client.messaging.starter.interceptor.KaveNegarUndeclaredExceptionAspect;
@@ -19,11 +20,14 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.http.converter.json.Jackson2ObjectMapperBuilder;
+import org.springframework.http.MediaType;
+import org.springframework.http.converter.HttpMessageConverters;
+import org.springframework.http.converter.json.JacksonJsonHttpMessageConverter;
 import org.springframework.web.client.ResponseErrorHandler;
 import org.springframework.web.client.RestClient;
 
 import java.text.SimpleDateFormat;
+import java.util.List;
 
 /**
  * @author Ali Alimohammadi
@@ -55,17 +59,30 @@ public class KaveNegarClientConfiguration extends AbstractRestClientConfiguratio
         return new KaveNegarErrorHandler(new KaveNegarResponseHandler());
     }
 
+    @Override
+    protected void configureMessageConverters(HttpMessageConverters.ClientBuilder converters) {
+        super.configureMessageConverters(converters);
+        JacksonJsonHttpMessageConverter jacksonConverter =
+                new JacksonJsonHttpMessageConverter();
+        jacksonConverter.setSupportedMediaTypes(List.of(
+                MediaType.APPLICATION_JSON,
+                MediaType.APPLICATION_FORM_URLENCODED
+        ));
+        converters.addCustomConverter(jacksonConverter);
+    }
+
     @Bean("kave-negar-objectMapper")
     public ObjectMapper objectMapper() {
-        return Jackson2ObjectMapperBuilder.json()
-                .findModulesViaServiceLoader(true)
-                .dateFormat(new SimpleDateFormat(DATE_TIME_PATTERN))
-                .serializationInclusion(JsonInclude.Include.NON_NULL)
-                .featuresToDisable(
-                        SerializationFeature.WRITE_DATES_AS_TIMESTAMPS,
-                        SerializationFeature.FAIL_ON_EMPTY_BEANS,
-                        DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES
+        return JsonMapper.builder()
+                .findAndAddModules()
+                .defaultDateFormat(new SimpleDateFormat(DATE_TIME_PATTERN))
+                .defaultPropertyInclusion(JsonInclude.Value.construct(
+                        JsonInclude.Include.NON_NULL,
+                        JsonInclude.Include.ALWAYS)
                 )
+                .disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS)
+                .disable(SerializationFeature.FAIL_ON_EMPTY_BEANS)
+                .disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES)
                 .build();
     }
 

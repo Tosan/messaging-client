@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
+import com.fasterxml.jackson.databind.json.JsonMapper;
 import com.tosan.client.http.core.HttpClientProperties;
 import com.tosan.client.http.starter.configuration.AbstractFeignConfiguration;
 import com.tosan.client.http.starter.impl.feign.CustomErrorDecoderConfig;
@@ -23,26 +24,15 @@ import feign.*;
 import feign.codec.Decoder;
 import feign.codec.Encoder;
 import io.micrometer.observation.ObservationRegistry;
-import org.apache.hc.client5.http.classic.HttpClient;
 import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
-import org.springframework.cloud.openfeign.AnnotatedParameterProcessor;
 import org.springframework.cloud.openfeign.EnableFeignClients;
-import org.springframework.cloud.openfeign.FeignFormatterRegistrar;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.core.convert.ConversionService;
-import org.springframework.core.env.Environment;
-import org.springframework.format.support.FormattingConversionService;
-import org.springframework.http.client.ClientHttpRequestFactory;
-import org.springframework.http.converter.HttpMessageConverter;
-import org.springframework.http.converter.json.Jackson2ObjectMapperBuilder;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.List;
 
 /**
  * @author saber mortazavi
@@ -67,18 +57,19 @@ public class ArmaghanNegarClientConfiguration extends AbstractFeignConfiguration
                 builderProvider, encoder, decoder, contract);
     }
 
-    @Bean({"armaghan-negar-objectMapper"})
+    @Bean("armaghan-negar-objectMapper")
     public ObjectMapper objectMapper() {
-        DateFormat dateFormat = new SimpleDateFormat(DATE_PATTERN);
-        ObjectMapper objectMapper = new Jackson2ObjectMapperBuilder().build();
-        objectMapper
-                .findAndRegisterModules()
+        return JsonMapper.builder()
+                .findAndAddModules()
+                .defaultDateFormat(new SimpleDateFormat(DATE_PATTERN))
+                .defaultPropertyInclusion(JsonInclude.Value.construct(
+                        JsonInclude.Include.NON_NULL,
+                        JsonInclude.Include.ALWAYS)
+                )
                 .disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS)
-                .setDateFormat(dateFormat)
-                .setSerializationInclusion(JsonInclude.Include.NON_NULL)
-                .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
-                .configure(SerializationFeature.FAIL_ON_EMPTY_BEANS, false);
-        return objectMapper;
+                .disable(SerializationFeature.FAIL_ON_EMPTY_BEANS)
+                .disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES)
+                .build();
     }
 
     @Override

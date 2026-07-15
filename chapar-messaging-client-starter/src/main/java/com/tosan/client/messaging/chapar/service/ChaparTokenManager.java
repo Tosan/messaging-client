@@ -64,7 +64,7 @@ public class ChaparTokenManager {
         String url = externalServiceInvoker.generateUrl(ChaparUrl.LOGIN.getUrl());
         try {
             ResponseEntity<GetTokenResponseDto> response = externalServiceInvoker.getClient()
-                    .post().uri(url).headers(tokenHeaders()).body(buildTokenForm()).retrieve()
+                    .post().uri(url).headers(tokenRequestHeaders()).body(buildTokenRequestForm()).retrieve()
                     .toEntity(GetTokenResponseDto.class);
             GetTokenResponseDto body = response.getBody();
             String accessToken = (body != null) ? body.getAccessToken() : null;
@@ -90,14 +90,14 @@ public class ChaparTokenManager {
         }
     }
 
-    private Consumer<HttpHeaders> tokenHeaders() {
+    private Consumer<HttpHeaders> tokenRequestHeaders() {
         return headers -> {
             headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
             headers.setAccept(List.of(MediaType.APPLICATION_JSON));
         };
     }
 
-    private MultiValueMap<String, String> buildTokenForm() {
+    private MultiValueMap<String, String> buildTokenRequestForm() {
         MultiValueMap<String, String> form = new LinkedMultiValueMap<>();
         form.add(FORM_CLIENT_ID, chaparClientProperties.getClientId());
         form.add(FORM_CLIENT_SECRET, chaparClientProperties.getClientSecret());
