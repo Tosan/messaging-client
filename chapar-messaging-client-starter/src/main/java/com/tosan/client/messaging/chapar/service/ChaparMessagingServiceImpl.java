@@ -1,7 +1,7 @@
 package com.tosan.client.messaging.chapar.service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.tosan.client.http.resttemplate.starter.impl.ExternalServiceInvoker;
+import com.tosan.client.http.restclient.starter.impl.ExternalServiceInvoker;
 import com.tosan.client.messaging.chapar.api.ChaparMessagingService;
 import com.tosan.client.messaging.chapar.api.dto.SendEventResponseDto;
 import com.tosan.client.messaging.chapar.api.exception.ChaparMessagingRuntimeException;
@@ -9,7 +9,6 @@ import com.tosan.client.messaging.chapar.api.exception.ChaparMessagingValidation
 import com.tosan.client.messaging.chapar.service.assembler.ChaparAssembler;
 import com.tosan.client.messaging.chapar.service.enumeration.ChaparUrl;
 import com.tosan.client.messaging.chapar.service.model.ErrorObject;
-import com.tosan.client.messaging.chapar.service.model.SendEventRequestDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.*;
@@ -19,6 +18,7 @@ import org.springframework.web.client.HttpStatusCodeException;
 import org.springframework.web.client.RestClientException;
 
 import java.util.List;
+import java.util.function.Consumer;
 
 /**
  * @author Amirhossein Zamanzade
@@ -41,7 +41,7 @@ public class ChaparMessagingServiceImpl implements ChaparMessagingService {
     }
 
     private SendEventResponseDto doSendEvent(com.tosan.client.messaging.chapar.api.dto.SendEventRequestDto request,
-            boolean retryRequest) {
+                                             boolean retryRequest) {
 
         try {
             return invokeChaparSendEvent(request, retryRequest);
@@ -63,24 +63,25 @@ public class ChaparMessagingServiceImpl implements ChaparMessagingService {
     private SendEventResponseDto invokeChaparSendEvent(
             com.tosan.client.messaging.chapar.api.dto.SendEventRequestDto request, boolean retryRequest) {
 
-        HttpEntity<SendEventRequestDto> httpEntity =
-                new HttpEntity<>(chaparAssembler.toSendEventRequest(request), buildHeaders());
-
         log.info("Calling Chapar send event endpoint{}", retryRequest ? " after token refresh" : "");
 
         ResponseEntity<SendEventResponseDto> response = externalServiceInvoker
-                .getRestTemplate()
-                .postForEntity(externalServiceInvoker.generateUrl(ChaparUrl.SEND_EVENT.getUrl()), httpEntity,
-                        SendEventResponseDto.class);
+                .getClient()
+                .post()
+                .uri(externalServiceInvoker.generateUrl(ChaparUrl.SEND_EVENT.getUrl()))
+                .headers(tokenHeaders())
+                .body(chaparAssembler.toSendEventRequest(request))
+                .retrieve()
+                .toEntity(SendEventResponseDto.class);
         return response.getBody();
     }
 
-    private HttpHeaders buildHeaders() {
-        HttpHeaders headers = new HttpHeaders();
-        headers.setBearerAuth(tokenManager.getAccessToken());
-        headers.setContentType(MediaType.APPLICATION_JSON);
-        headers.setAccept(List.of(MediaType.APPLICATION_JSON));
-        return headers;
+    private Consumer<HttpHeaders> tokenHeaders() {
+        return headers -> {
+            headers.setBearerAuth(tokenManager.getAccessToken());
+            headers.setContentType(MediaType.APPLICATION_JSON);
+            headers.setAccept(List.of(MediaType.APPLICATION_JSON));
+        };
     }
 
     private RuntimeException mapStatusException(HttpStatusCodeException e) {

@@ -28,7 +28,7 @@ public class MessagingClientConfiguration {
     @Bean("messaging-client-clientConfig")
     @ConfigurationProperties(prefix = "messaging-client")
     @ConditionalOnMissingBean(name = "messaging-client-clientConfig")
-    public HttpClientProperties clientConfig() {
+    public MessagingClientConfig clientConfig() {
         return new MessagingClientConfig();
     }
 

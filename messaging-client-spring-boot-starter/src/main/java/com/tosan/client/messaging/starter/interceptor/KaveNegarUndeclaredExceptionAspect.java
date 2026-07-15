@@ -1,6 +1,6 @@
 package com.tosan.client.messaging.starter.interceptor;
 
-import com.tosan.client.http.resttemplate.starter.exception.HttpClientRequestExecuteException;
+import com.tosan.client.http.restclient.starter.exception.HttpClientRequestExecuteException;
 import com.tosan.client.messaging.starter.exception.MessagingException;
 import com.tosan.client.messaging.starter.exception.MessagingRuntimeException;
 import com.tosan.client.messaging.starter.exception.business.MessagingServiceException;

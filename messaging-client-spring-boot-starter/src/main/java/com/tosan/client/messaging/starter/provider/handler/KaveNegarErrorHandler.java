@@ -1,6 +1,6 @@
 package com.tosan.client.messaging.starter.provider.handler;
 
-import com.tosan.client.http.resttemplate.starter.impl.interceptor.AbstractErrorHandler;
+import com.tosan.client.http.restclient.starter.impl.interceptor.AbstractErrorHandler;
 import com.tosan.client.messaging.starter.provider.kavenegar.model.KaveNegarResponseDto;
 import com.tosan.client.messaging.starter.exception.MessagingRuntimeException;
 import com.tosan.client.messaging.starter.exception.UndeclaredMessagingException;

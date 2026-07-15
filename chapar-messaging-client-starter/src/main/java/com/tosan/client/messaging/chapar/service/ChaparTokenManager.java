@@ -1,6 +1,6 @@
 package com.tosan.client.messaging.chapar.service;
 
-import com.tosan.client.http.resttemplate.starter.impl.ExternalServiceInvoker;
+import com.tosan.client.http.restclient.starter.impl.ExternalServiceInvoker;
 import com.tosan.client.messaging.chapar.api.exception.ChaparMessagingRuntimeException;
 import com.tosan.client.messaging.chapar.api.exception.ChaparMessagingValidationException;
 import com.tosan.client.messaging.chapar.config.properties.ChaparClientProperties;
@@ -8,7 +8,6 @@ import com.tosan.client.messaging.chapar.service.enumeration.ChaparUrl;
 import com.tosan.client.messaging.chapar.service.model.GetTokenResponseDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -19,6 +18,7 @@ import org.springframework.web.client.HttpStatusCodeException;
 import org.springframework.web.client.RestClientException;
 
 import java.util.List;
+import java.util.function.Consumer;
 
 /**
  * @author Amirhossein Zamanzade
@@ -62,12 +62,10 @@ public class ChaparTokenManager {
         validateConfig();
 
         String url = externalServiceInvoker.generateUrl(ChaparUrl.LOGIN.getUrl());
-        HttpEntity<MultiValueMap<String, String>> entity = new HttpEntity<>(buildTokenForm(), buildTokenHeaders());
-
         try {
-            ResponseEntity<GetTokenResponseDto> response =
-                    externalServiceInvoker.getRestTemplate().postForEntity(url, entity, GetTokenResponseDto.class);
-
+            ResponseEntity<GetTokenResponseDto> response = externalServiceInvoker.getClient()
+                    .post().uri(url).headers(tokenRequestHeaders()).body(buildTokenRequestForm()).retrieve()
+                    .toEntity(GetTokenResponseDto.class);
             GetTokenResponseDto body = response.getBody();
             String accessToken = (body != null) ? body.getAccessToken() : null;
 
@@ -92,14 +90,14 @@ public class ChaparTokenManager {
         }
     }
 
-    private HttpHeaders buildTokenHeaders() {
-        HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
-        headers.setAccept(List.of(MediaType.APPLICATION_JSON));
-        return headers;
+    private Consumer<HttpHeaders> tokenRequestHeaders() {
+        return headers -> {
+            headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
+            headers.setAccept(List.of(MediaType.APPLICATION_JSON));
+        };
     }
 
-    private MultiValueMap<String, String> buildTokenForm() {
+    private MultiValueMap<String, String> buildTokenRequestForm() {
         MultiValueMap<String, String> form = new LinkedMultiValueMap<>();
         form.add(FORM_CLIENT_ID, chaparClientProperties.getClientId());
         form.add(FORM_CLIENT_SECRET, chaparClientProperties.getClientSecret());

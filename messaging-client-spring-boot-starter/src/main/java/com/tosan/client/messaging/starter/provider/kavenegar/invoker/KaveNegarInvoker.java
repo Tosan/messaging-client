@@ -2,9 +2,10 @@ package com.tosan.client.messaging.starter.provider.kavenegar.invoker;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.tosan.client.http.core.HttpClientProperties;
-import com.tosan.client.http.resttemplate.starter.impl.ExternalServiceInvoker;
+import com.tosan.client.http.restclient.starter.impl.ClientService;
+import com.tosan.client.http.restclient.starter.impl.ExternalServiceInvoker;
 import com.tosan.client.messaging.starter.config.MessagingClientConfig;
-import org.springframework.web.client.RestTemplate;
+import lombok.Getter;
 
 import java.util.Map;
 
@@ -14,24 +15,24 @@ import java.util.Map;
  */
 public class KaveNegarInvoker extends ExternalServiceInvoker {
     private final ObjectMapper objectMapper;
-    private final String apiKey;
+    @Getter
     private final MessagingClientConfig messagingClientConfig;
 
-    public KaveNegarInvoker(RestTemplate restTemplate, HttpClientProperties httpClientProperties,
+    public KaveNegarInvoker(ClientService clientService, MessagingClientConfig httpClientProperties,
                             ObjectMapper objectMapper) {
-        super(restTemplate, httpClientProperties);
+        super(clientService, httpClientProperties);
         this.objectMapper = objectMapper;
-        this.messagingClientConfig = ((MessagingClientConfig) httpClientProperties);
-        this.apiKey = ((MessagingClientConfig) httpClientProperties).getKaveNegar().getApiKey();
+        this.messagingClientConfig = httpClientProperties;
     }
 
-    @Override
-    public String generateUrl(String url) {
-        return super.generateUrl("/" + apiKey + url);
-    }
-
-    public MessagingClientConfig getMessagingClientConfig() {
-        return messagingClientConfig;
+    public String generateUrl(String path) {
+        String baseUrl = messagingClientConfig.getBaseServiceUrl();
+        if (path == null || path.isBlank()) {
+            return baseUrl;
+        }
+        String normalizedBase = baseUrl.endsWith("/") ? baseUrl : String.format("%s/", baseUrl);
+        String normalizedPath = path.startsWith("/") ? path : String.format("/%s", path);
+        return String.format("%s%s%s", normalizedBase, messagingClientConfig.getKaveNegar().getApiKey(), normalizedPath);
     }
 
     @SuppressWarnings("unchecked")
