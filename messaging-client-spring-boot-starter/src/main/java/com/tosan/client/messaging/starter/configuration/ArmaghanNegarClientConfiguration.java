@@ -30,8 +30,6 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.cloud.openfeign.EnableFeignClients;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-
-import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 
 /**
@@ -93,7 +91,7 @@ public class ArmaghanNegarClientConfiguration extends AbstractFeignConfiguration
     public ExternalServiceInvoker<WebserviceApi> armaghanNegarServiceClient(
             @Qualifier("messaging-client-clientConfig")
             MessagingClientConfig properties) {
-        return super.createServiceInvoker(properties, properties.getBaseServiceUrl(), WebserviceApi.class);
+        return super.createServiceInvoker(properties, WebserviceApi.class);
     }
 
 

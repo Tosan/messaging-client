@@ -1,7 +1,6 @@
 package com.tosan.client.messaging.starter.provider.kavenegar.invoker;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.tosan.client.http.core.HttpClientProperties;
 import com.tosan.client.http.restclient.starter.impl.ClientService;
 import com.tosan.client.http.restclient.starter.impl.ExternalServiceInvoker;
 import com.tosan.client.messaging.starter.config.MessagingClientConfig;
@@ -25,6 +24,7 @@ public class KaveNegarInvoker extends ExternalServiceInvoker {
         this.messagingClientConfig = httpClientProperties;
     }
 
+    @Override
     public String generateUrl(String path) {
         String baseUrl = messagingClientConfig.getBaseServiceUrl();
         if (path == null || path.isBlank()) {

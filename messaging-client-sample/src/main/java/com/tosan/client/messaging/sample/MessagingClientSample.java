@@ -35,14 +35,13 @@ import java.util.Set;
 @FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
 @Slf4j
 @SpringBootApplication(scanBasePackages = {"com.tosan.client.messaging"})
-public class ArmaghanNegarSample implements CommandLineRunner {
-
+public class MessagingClientSample implements CommandLineRunner {
 
     private final MessagingService messagingService;
     private final ChaparMessagingService chaparMessagingService;
 
     public static void main(String[] args) {
-        new SpringApplicationBuilder(ArmaghanNegarSample.class)
+        new SpringApplicationBuilder(MessagingClientSample.class)
                 .web(WebApplicationType.NONE)
                 .build()
                 .run();
@@ -120,6 +119,7 @@ public class ArmaghanNegarSample implements CommandLineRunner {
     private void sendSimpleOtp() {
         SendOtpRequest simpleSendOtpRequest = new SendOtpRequest();
         simpleSendOtpRequest.setDestination("09120453595");
+        simpleSendOtpRequest.setOtpType(OtpType.SIMPLE);
         SimpleOtpDetailInfo simpleOtpDetailInfo = new SimpleOtpDetailInfo();
         simpleOtpDetailInfo.setOtpMessageContent("رمز 1234");
         simpleSendOtpRequest.setSimpleOtpDetailInfo(simpleOtpDetailInfo);

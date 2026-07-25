@@ -25,7 +25,7 @@
 
     <properties>
         <java.version>17</java.version>
-        <tosan.httpclient.version>4.0.0</tosan.httpclient.version>
+        <tosan.httpclient.version>4.0.1</tosan.httpclient.version>
         <teddison.version>1.9.4</teddison.version>
     </properties>
 
