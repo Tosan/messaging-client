@@ -84,10 +84,4 @@ public class ChaparClientAutoConfiguration extends AbstractRestClientConfigurati
             @Qualifier("chapar-assembler") ChaparAssembler chaparAssembler) {
         return new ChaparMessagingServiceImpl(externalServiceInvoker, tokenManager, objectMapper, chaparAssembler);
     }
-
-    @Bean("chapar-client-properties")
-    @ConfigurationProperties("chapar.messaging-client")
-    public ChaparClientProperties chaparClientProperties() {
-        return new ChaparClientProperties();
-    }
 }
