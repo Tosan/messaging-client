@@ -20,6 +20,7 @@
     <modules>
         <module>messaging-client-spring-boot-starter</module>
         <module>chapar-messaging-client-starter</module>
+        <module>messaging-client-credit-monitor-starter</module>
         <module>messaging-client-sample</module>
     </modules>
 

@@ -2,10 +2,7 @@ package com.tosan.client.messaging.starter.service.assembler;
 
 import com.tosan.client.messaging.starter.model.*;
 import com.tosan.client.messaging.starter.model.enumeration.OtpMediaType;
-import com.tosan.client.messaging.starter.provider.kavenegar.model.EntryInfo;
-import com.tosan.client.messaging.starter.provider.kavenegar.model.KaveNegarResponseDto;
-import com.tosan.client.messaging.starter.provider.kavenegar.model.KaveNegarSendOtpRequestDto;
-import com.tosan.client.messaging.starter.provider.kavenegar.model.KaveNegarSendRequestDto;
+import com.tosan.client.messaging.starter.provider.kavenegar.model.*;
 import com.tosan.client.messaging.starter.provider.kavenegar.model.enumeration.KaveNegarOtpType;
 import lombok.AllArgsConstructor;
 import org.springframework.util.CollectionUtils;
@@ -160,4 +157,15 @@ public class KaveNegarAssembler {
         }
         return sendRequestDto;
     }
+
+    public AccountInfoResponse toAccountInfoResponse(KaveNegarAccountInfoResponseDto responseDto) {
+        if (responseDto == null) {
+            return null;
+        }
+        KaveNegarAccountInfoEntriesDto entries = responseDto.getEntries();
+        AccountInfoResponse response = new AccountInfoResponse();
+        response.setRemainCredit(entries.getRemainCredit());
+        return response;
+    }
+
 }
