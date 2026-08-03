@@ -74,4 +74,9 @@ public class ArmaghanNegarMessagingService implements MessagingService {
             throw new InvalidOtpTypeException("Unsupported OTP type: " + request.getOtpType());
         }
     }
+
+    @Override
+    public AccountInfoResponse getAccountInfo() throws MessagingException {
+        throw new MessagingException("Not Implemented yet.");
+    }
 }

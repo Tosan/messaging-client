@@ -12,4 +12,6 @@ public interface MessagingService {
     SendOneToOneResponse sendOneToOneMessage(SendOneToOneRequest request) throws MessagingException;
 
     SendOtpResponse sendOtpMessage(SendOtpRequest request) throws MessagingException;
+
+    AccountInfoResponse getAccountInfo() throws MessagingException;
 }

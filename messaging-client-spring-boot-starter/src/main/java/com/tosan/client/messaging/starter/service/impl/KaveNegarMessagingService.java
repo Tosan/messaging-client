@@ -6,6 +6,7 @@ import com.tosan.client.messaging.starter.model.*;
 import com.tosan.client.messaging.starter.model.enumeration.OtpMediaType;
 import com.tosan.client.messaging.starter.model.enumeration.OtpType;
 import com.tosan.client.messaging.starter.provider.kavenegar.invoker.KaveNegarInvoker;
+import com.tosan.client.messaging.starter.provider.kavenegar.model.KaveNegarAccountInfoResponseDto;
 import com.tosan.client.messaging.starter.provider.kavenegar.model.KaveNegarResponseDto;
 import com.tosan.client.messaging.starter.provider.kavenegar.model.KaveNegarSendOtpRequestDto;
 import com.tosan.client.messaging.starter.provider.kavenegar.model.KaveNegarSendRequestDto;
@@ -16,6 +17,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import static com.tosan.client.messaging.starter.model.enumeration.OtpType.SIMPLE;
@@ -31,6 +34,7 @@ public class KaveNegarMessagingService implements MessagingService {
     private static final String SEND_URL = "/sms/send.json";
     private static final String LOOKUP_URL = "/verify/lookup.json";
     private static final String MAKE_TTS_URL = "/call/maketts.json";
+    private static final String ACCOUNT_INFO_PATH = "account/info.json";
     private final KaveNegarInvoker kaveNegarInvoker;
     private final KaveNegarAssembler kaveNegarAssembler;
 
@@ -93,5 +97,17 @@ public class KaveNegarMessagingService implements MessagingService {
                 .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_FORM_URLENCODED_VALUE)
                 .retrieve()
                 .body(KaveNegarResponseDto.class);
+    }
+
+    public AccountInfoResponse getAccountInfo() {
+        String url = kaveNegarInvoker.generateUrl(ACCOUNT_INFO_PATH);
+        KaveNegarAccountInfoResponseDto responseDto = kaveNegarInvoker.getClient()
+                .post()
+                .uri(url)
+                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                .body(new LinkedMultiValueMap<>())
+                .retrieve()
+                .body(KaveNegarAccountInfoResponseDto.class);
+        return kaveNegarAssembler.toAccountInfoResponse(responseDto);
     }
 }
