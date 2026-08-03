@@ -59,7 +59,7 @@ public class MessagingClientSample implements CommandLineRunner {
     }
 
     @Override
-    public void run(String... args){
+    public void run(String... args) {
 //        sendVoiceOtpRequest();
 //        sendTemplatedSms();
 //        sendSimpleOtp();
@@ -169,7 +169,7 @@ public class MessagingClientSample implements CommandLineRunner {
     private void getAccountInfo() {
         try {
             AccountInfoResponse accountInfo = messagingService.getAccountInfo();
-            log.info("Remain credit :{}",accountInfo.getRemainCreditRial().toString());
+            log.info("Remain credit :{}", accountInfo.getRemainCreditRial());
         } catch (Exception e) {
             log.error("error: ", e);
         }
