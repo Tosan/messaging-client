@@ -169,7 +169,7 @@ public class MessagingClientSample implements CommandLineRunner {
     private void getAccountInfo() {
         try {
             AccountInfoResponse accountInfo = messagingService.getAccountInfo();
-            log.info("Remain credit :{}",accountInfo.getRemainCreditToman().toString());
+            log.info("Remain credit :{}",accountInfo.getRemainCreditRial().toString());
         } catch (Exception e) {
             log.error("error: ", e);
         }

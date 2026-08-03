@@ -18,8 +18,8 @@ public class CreditMonitorScheduler {
     public void checkAccountCredit() {
         try {
             AccountInfoResponse accountInfo = messagingService.getAccountInfo();
-            Long remainCredit = accountInfo.getRemainCreditToman();
-            Long minCreditThreshold = properties.getMinimumCreditThresholdToman();
+            Long remainCredit = accountInfo.getRemainCreditRial();
+            Long minCreditThreshold = properties.getMinimumCreditThresholdRial();
             if (remainCredit == null) {
                 log.error("Messaging account credit is null, cannot evaluate threshold={}",
                         minCreditThreshold);
