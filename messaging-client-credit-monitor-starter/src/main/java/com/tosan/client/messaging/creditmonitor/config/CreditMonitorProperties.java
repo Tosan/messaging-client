@@ -9,5 +9,5 @@ public class CreditMonitorProperties {
     private boolean enabled;
     private String cron;
     private String timezone;
-    private Long minCreditThreshold;
+    private Long minimumCreditThresholdToman;
 }

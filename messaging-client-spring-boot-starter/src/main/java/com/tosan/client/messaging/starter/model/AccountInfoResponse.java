@@ -8,5 +8,5 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Data
 public class AccountInfoResponse {
-    private Long remainCredit;
+    private Long remainCreditToman;
 }

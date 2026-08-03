@@ -164,7 +164,7 @@ public class KaveNegarAssembler {
         }
         KaveNegarAccountInfoEntriesDto entries = responseDto.getEntries();
         AccountInfoResponse response = new AccountInfoResponse();
-        response.setRemainCredit(entries.getRemainCredit());
+        response.setRemainCreditToman(entries.getRemainCredit());
         return response;
     }
 

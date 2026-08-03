@@ -18,20 +18,22 @@ public class CreditMonitorScheduler {
     public void checkAccountCredit() {
         try {
             AccountInfoResponse accountInfo = messagingService.getAccountInfo();
-            Long remainCredit = accountInfo.getRemainCredit();
-            Long minCreditThreshold = properties.getMinCreditThreshold();
+            Long remainCredit = accountInfo.getRemainCreditToman();
+            Long minCreditThreshold = properties.getMinimumCreditThresholdToman();
             if (remainCredit == null) {
-                log.warn("Messaging account credit is null, cannot evaluate threshold={}",
+                log.error("Messaging account credit is null, cannot evaluate threshold={}",
                         minCreditThreshold);
                 return;
             }
             if (minCreditThreshold != null && remainCredit < minCreditThreshold) {
-                log.error("Messaging account credit alert: credit={} is below configured threshold={}",
-                        remainCredit, minCreditThreshold);
-            } else {
-                log.info("Messaging account credit check passed, current credit={}, configured threshold={}",
+                log.warn("Messaging account credit alert: credit={} is below configured threshold={}",
                         remainCredit, minCreditThreshold);
             }
+            // TODO: maybe we need this
+//             else {
+//                log.info("Messaging account credit check passed, current credit={}, configured threshold={}",
+//                        remainCredit, minCreditThreshold);
+//            }
         } catch (Exception e) {
             log.error("Messaging account credit check failed: ", e);
         }

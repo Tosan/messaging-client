@@ -328,7 +328,7 @@ public interface WebserviceApi {
     )
     @ResponseStatus(HttpStatus.OK)
 
-    void userinfo(
+    UserInfoResponse userinfo(
             @Parameter(name = "UserinfoRequest", description = "") @Valid @RequestBody(required = false) UserinfoRequest userinfoRequest
     ) throws
             ArmaghanNegarRuntimeException;

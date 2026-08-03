@@ -13,5 +13,5 @@ public interface MessagingService {
 
     SendOtpResponse sendOtpMessage(SendOtpRequest request) throws MessagingException;
 
-    AccountInfoResponse getAccountInfo() throws MessagingException;
+    AccountInfoResponse getAccountInfo();
 }

@@ -2,6 +2,7 @@ package com.tosan.client.messaging.starter.service.impl;
 
 import com.tosan.client.http.starter.impl.feign.ExternalServiceInvoker;
 import com.tosan.client.messaging.starter.exception.MessagingException;
+import com.tosan.client.messaging.starter.exception.MessagingRuntimeException;
 import com.tosan.client.messaging.starter.exception.business.InvalidMediaTypeException;
 import com.tosan.client.messaging.starter.exception.business.InvalidOtpTypeException;
 import com.tosan.client.messaging.starter.model.*;
@@ -9,6 +10,8 @@ import com.tosan.client.messaging.starter.model.enumeration.OtpMediaType;
 import com.tosan.client.messaging.starter.provider.armaghan.facade.WebserviceApi;
 import com.tosan.client.messaging.starter.provider.armaghan.model.SendmanytomanymessageRequest;
 import com.tosan.client.messaging.starter.provider.armaghan.model.Sendonetomanymessage200Response;
+import com.tosan.client.messaging.starter.provider.armaghan.model.UserInfoResponse;
+import com.tosan.client.messaging.starter.provider.armaghan.model.UserinfoRequest;
 import com.tosan.client.messaging.starter.provider.handler.ArmaghanNegarResponseHandler;
 import com.tosan.client.messaging.starter.service.MessagingService;
 import com.tosan.client.messaging.starter.service.assembler.ArmaghanNegarAssembler;
@@ -76,7 +79,14 @@ public class ArmaghanNegarMessagingService implements MessagingService {
     }
 
     @Override
-    public AccountInfoResponse getAccountInfo() throws MessagingException {
-        throw new MessagingException("Not Implemented yet.");
+    public AccountInfoResponse getAccountInfo() {
+        UserInfoResponse userInfoResponse = serviceInvoker.getClient()
+                .userinfo(armaghanNegarAssembler.generateUserInfoRequest());
+        if (userInfoResponse == null || userInfoResponse.getUserInfo() == null) {
+            throw new MessagingRuntimeException("Unable to retrieve user information." +
+                    " UserInfo response or data is null.");
+        }
+        // TODO: I’m not sure about the currency type.
+        return new AccountInfoResponse(userInfoResponse.getUserInfo().getCredit());
     }
 }

@@ -4,6 +4,7 @@ import com.tosan.client.messaging.starter.config.MessagingClientConfig;
 import com.tosan.client.messaging.starter.model.*;
 import com.tosan.client.messaging.starter.provider.armaghan.model.SendmanytomanymessageRequest;
 import com.tosan.client.messaging.starter.provider.armaghan.model.Sendonetomanymessage200Response;
+import com.tosan.client.messaging.starter.provider.armaghan.model.UserinfoRequest;
 import com.tosan.client.messaging.starter.provider.armaghan.modelsabstraction.ClientConfigurable;
 import com.tosan.client.messaging.starter.provider.armaghan.modelsabstraction.ClientConfigurableWithOriginator;
 import com.tosan.client.messaging.starter.provider.handler.ArmaghanNegarStatus;
@@ -49,8 +50,14 @@ public class ArmaghanNegarAssembler {
         return request;
     }
 
+    public UserinfoRequest generateUserInfoRequest() {
+        UserinfoRequest request = new UserinfoRequest();
+        setClientConfig(request);
+        return request;
+    }
+
     public SendOneToOneResponse toOneToOneResponse(Sendonetomanymessage200Response sendonetomanymessage200Response,
-            String destination) {
+                                                   String destination) {
         SendOneToOneResponse response = new SendOneToOneResponse();
         sendonetomanymessage200Response.getReferences().stream().findFirst().ifPresent(reference -> {
             response.setResponseModel(referenceToResponseModel(
@@ -71,7 +78,7 @@ public class ArmaghanNegarAssembler {
     }
 
     public SendOneToManyResponse toOneToManyResponse(Sendonetomanymessage200Response sendonetomanymessage200Response,
-            List<String> destinations) {
+                                                     List<String> destinations) {
         SendOneToManyResponse response = new SendOneToManyResponse();
 
         List<MessageResponseModel> messageResponseModels = IntStream.range(0, sendonetomanymessage200Response
@@ -96,7 +103,7 @@ public class ArmaghanNegarAssembler {
     }
 
     public SendManyToManyResponse toManyToManyResponse(Sendonetomanymessage200Response sendonetomanymessage200Response,
-            List<String> destinations) {
+                                                       List<String> destinations) {
         SendManyToManyResponse response = new SendManyToManyResponse();
 
         List<MessageResponseModel> messageResponseModels = IntStream.range(0, sendonetomanymessage200Response
