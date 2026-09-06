@@ -4,9 +4,9 @@ import com.tosan.client.http.restclient.starter.impl.ExternalServiceInvoker;
 import com.tosan.client.messaging.chapar.api.exception.ChaparMessagingRuntimeException;
 import com.tosan.client.messaging.chapar.api.exception.ChaparMessagingValidationException;
 import com.tosan.client.messaging.chapar.config.properties.ChaparClientProperties;
+import com.tosan.client.messaging.chapar.config.properties.ChaparGrantType;
 import com.tosan.client.messaging.chapar.service.enumeration.ChaparUrl;
 import com.tosan.client.messaging.chapar.service.model.GetTokenResponseDto;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
@@ -24,20 +24,27 @@ import java.util.function.Consumer;
  * @author Amirhossein Zamanzade
  * @since 5/16/26
  */
-@RequiredArgsConstructor
 @Slf4j
 public class ChaparTokenManager {
 
-    private static final String GRANT_TYPE_CLIENT_CREDENTIALS = "client_credentials";
-    private static final String FORM_GRANT_TYPE = "grant_type";
-    private static final String FORM_CLIENT_SECRET = "client_secret";
-    private static final String FORM_CLIENT_ID = "client_id";
-
+    private static final String FORM_GRANT_TYPE_KEY = "grant_type";
+    private static final String FORM_CLIENT_SECRET_KEY = "client_secret";
+    private static final String FORM_CLIENT_ID_KEY = "client_id";
+    private static final String FORM_USERNAME_KEY = "username";
+    private static final String FORM_PASSWORD_KEY = "password";
     private static final long DEFAULT_EXPIRES_IN_SECONDS = 120L;
 
     private final ExternalServiceInvoker externalServiceInvoker;
     private final ChaparClientProperties chaparClientProperties;
     private final ChaparTokenCacheService tokenCache;
+
+    public ChaparTokenManager(ExternalServiceInvoker externalServiceInvoker,
+            ChaparClientProperties chaparClientProperties, ChaparTokenCacheService tokenCache) {
+        this.externalServiceInvoker = externalServiceInvoker;
+        this.chaparClientProperties = chaparClientProperties;
+        this.tokenCache = tokenCache;
+        validateConfig();
+    }
 
     public String getAccessToken() {
         String cached = tokenCache.getToken();
@@ -59,7 +66,6 @@ public class ChaparTokenManager {
     }
 
     private String fetchAndCacheToken() {
-        validateConfig();
 
         String url = externalServiceInvoker.generateUrl(ChaparUrl.LOGIN.getUrl());
         try {
@@ -99,9 +105,13 @@ public class ChaparTokenManager {
 
     private MultiValueMap<String, String> buildTokenRequestForm() {
         MultiValueMap<String, String> form = new LinkedMultiValueMap<>();
-        form.add(FORM_CLIENT_ID, chaparClientProperties.getClientId());
-        form.add(FORM_CLIENT_SECRET, chaparClientProperties.getClientSecret());
-        form.add(FORM_GRANT_TYPE, GRANT_TYPE_CLIENT_CREDENTIALS);
+        form.add(FORM_CLIENT_ID_KEY, chaparClientProperties.getClientId());
+        form.add(FORM_CLIENT_SECRET_KEY, chaparClientProperties.getClientSecret());
+        form.add(FORM_GRANT_TYPE_KEY, chaparClientProperties.getGrantType().getValue());
+        if (chaparClientProperties.getGrantType().equals(ChaparGrantType.PASSWORD)) {
+            form.add(FORM_PASSWORD_KEY, chaparClientProperties.getPassword());
+            form.add(FORM_USERNAME_KEY, chaparClientProperties.getUsername());
+        }
         return form;
     }
 
@@ -114,6 +124,16 @@ public class ChaparTokenManager {
         }
         if (!StringUtils.hasText(chaparClientProperties.getClientSecret())) {
             throw new ChaparMessagingValidationException("messaging-client.chapar.client-secret is required");
+        }
+        if (chaparClientProperties.getGrantType() == null) {
+            throw new ChaparMessagingValidationException("messaging-client.chapar.grant-type is required");
+        }
+        if (chaparClientProperties.getGrantType().equals(ChaparGrantType.PASSWORD)) {
+            if (!StringUtils.hasText(chaparClientProperties.getPassword()) || !StringUtils.hasText(
+                    chaparClientProperties.getUsername())) {
+                throw new ChaparMessagingValidationException(
+                        "messaging-client.chapar.username and messaging-client.chapar.password are required");
+            }
         }
     }
 }
