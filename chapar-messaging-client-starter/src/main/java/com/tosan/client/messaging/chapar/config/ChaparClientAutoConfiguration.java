@@ -13,11 +13,11 @@ import com.tosan.client.messaging.chapar.service.ChaparMessagingServiceImpl;
 import com.tosan.client.messaging.chapar.service.ChaparTokenCacheService;
 import com.tosan.client.messaging.chapar.service.ChaparTokenManager;
 import com.tosan.client.messaging.chapar.service.assembler.ChaparAssembler;
+import com.tosan.client.redis.api.TedissonCacheManager;
 import com.tosan.tools.mask.starter.replace.JsonReplaceHelperDecider;
 import io.micrometer.observation.ObservationRegistry;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.autoconfigure.AutoConfiguration;
-import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.web.client.DefaultResponseErrorHandler;
 import org.springframework.web.client.ResponseErrorHandler;
@@ -61,6 +61,11 @@ public class ChaparClientAutoConfiguration extends AbstractRestClientConfigurati
     public ExternalServiceInvoker serviceInvoker(
             @Qualifier("chapar-client-properties") ChaparClientProperties httpClientProperties) {
         return super.createServiceInvoker(httpClientProperties);
+    }
+
+    @Bean("chapar-tokenCacheService")
+    public ChaparTokenCacheService chaparTokenCacheService(TedissonCacheManager tedissonCacheManager) {
+        return new ChaparTokenCacheService(tedissonCacheManager);
     }
 
     @Bean("chapar-tokenManager")
