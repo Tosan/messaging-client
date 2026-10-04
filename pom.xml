@@ -10,7 +10,7 @@
 
     <groupId>com.tosan.client.messaging</groupId>
     <artifactId>messaging-client</artifactId>
-    <version>1.0.2-SNAPSHOT</version>
+    <version>2.0.0</version>
     <packaging>pom</packaging>
 
     <name>messaging-client</name>
@@ -33,7 +33,7 @@
         <connection>scm:git:https://github.com/Tosan/messaging-client.git</connection>
         <developerConnection>scm:git:https://github.com/Tosan/messaging-client.git</developerConnection>
         <url>https://github.com/Tosan/messaging-client</url>
-        <tag>HEAD</tag>
+        <tag>v2.0.0</tag>
     </scm>
 
     <dependencyManagement>
