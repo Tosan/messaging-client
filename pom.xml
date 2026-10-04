@@ -4,7 +4,7 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>4.1.0</version>
+        <version>4.1.1</version>
         <relativePath />
     </parent>
 
@@ -25,8 +25,8 @@
 
     <properties>
         <java.version>17</java.version>
-        <tosan.httpclient.version>4.0.1</tosan.httpclient.version>
-        <teddison.version>1.9.4</teddison.version>
+        <tosan.httpclient.version>4.0.3</tosan.httpclient.version>
+        <teddison.version>2.0.1</teddison.version>
     </properties>
 
     <scm>

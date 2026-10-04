@@ -1,6 +1,6 @@
 package com.tosan.client.messaging.starter.provider.kavenegar.invoker;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
+import tools.jackson.databind.ObjectMapper;
 import com.tosan.client.http.restclient.starter.impl.ClientService;
 import com.tosan.client.http.restclient.starter.impl.ExternalServiceInvoker;
 import com.tosan.client.messaging.starter.config.MessagingClientConfig;
