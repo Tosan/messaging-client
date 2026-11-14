@@ -16,7 +16,8 @@ import com.tosan.client.messaging.starter.service.MessagingService;
 import com.tosan.client.messaging.starter.service.assembler.ArmaghanNegarAssembler;
 import com.tosan.client.messaging.starter.service.impl.ArmaghanNegarMessagingService;
 import com.tosan.tools.mask.starter.replace.JsonReplaceHelperDecider;
-import feign.*;
+import feign.Contract;
+import feign.Feign;
 import feign.codec.Decoder;
 import feign.codec.Encoder;
 import io.micrometer.observation.ObservationRegistry;
@@ -67,6 +68,7 @@ public class ArmaghanNegarClientConfiguration extends AbstractFeignConfiguration
                 .disable(DateTimeFeature.WRITE_DATES_AS_TIMESTAMPS)
                 .disable(SerializationFeature.FAIL_ON_EMPTY_BEANS)
                 .disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES)
+                .disable(DeserializationFeature.FAIL_ON_NULL_FOR_PRIMITIVES)
                 .build();
     }
 

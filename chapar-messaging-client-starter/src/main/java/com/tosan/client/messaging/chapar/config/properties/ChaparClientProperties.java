@@ -13,4 +13,7 @@ import lombok.Setter;
 public class ChaparClientProperties extends HttpClientProperties {
     private String clientId;
     private String clientSecret;
+    private ChaparGrantType grantType;
+    private String username;
+    private String password;
 }
